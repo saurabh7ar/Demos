@@ -4,9 +4,9 @@ Azure Private Link Service enables you to access Azure services and Azure hosted
 A private endpoint is a network interface that connects you privately and securely to a service powered by Azure Private Link.
 Traffic between your virtual network and the service traverses over the **Microsoft backbone network**, eliminating exposure from the public Internet.
 Azure Private Link provides the following benefits:
-    Privately access services on the Azure platform
-    Access services running in Azure from on-premises over ExpressRoute private peering, VPN tunnels, and peered virtual networks using private endpoints.
-    Protect against data leakage
+    1. Privately access services on the Azure platform
+    2. Access services running in Azure from on-premises over ExpressRoute private peering, VPN tunnels, and peered virtual networks using private endpoints.
+    3. Protect against data leakage
 
 Keep in mind these important factors while implementing private endpoints for Azure Service Bus:
     Service Bus can restrict integration with other Azure services, but exceptions can be made for trusted services. For a list of trusted services, refer this link - https://learn.microsoft.com/en-us/azure/service-bus-messaging/private-link-service#trusted-microsoft-services
@@ -23,6 +23,8 @@ To enable Azure Private Link integration for a Service Bus namespace, you requir
     An Azure virtual network with a subnet (default subnet can be used).
     Owner or contributor permissions for both the Service Bus namespace and the virtual network.
     The **private endpoint and virtual network must be in the same region**.
+
+![image](https://github.com/saurabh7ar/Demos/assets/132929888/65b4917f-8fc8-495e-bc3e-68be26b7403e)
 
 References:
     https://learn.microsoft.com/en-us/azure/private-link/private-link-overview
