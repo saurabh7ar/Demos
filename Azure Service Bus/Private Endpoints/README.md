@@ -25,6 +25,14 @@ To enable Azure Private Link integration for a Service Bus namespace, you requir
     The **private endpoint and virtual network must be in the same region**.
 
 ![image](https://github.com/saurabh7ar/Demos/assets/132929888/65b4917f-8fc8-495e-bc3e-68be26b7403e)
+![image](https://github.com/saurabh7ar/Demos/assets/132929888/9535a16f-4211-4ee5-b2bb-89d16dbebead)
+![image](https://github.com/saurabh7ar/Demos/assets/132929888/d0a0eb73-a712-48fa-b674-e305f97be173)
+![image](https://github.com/saurabh7ar/Demos/assets/132929888/b2d3148b-a1da-4726-a350-e651d349636a)
+![image](https://github.com/saurabh7ar/Demos/assets/132929888/f29e63e4-5c52-4e5a-aedd-67d14659a8c2)
+
+
+
+
 
 References:
     https://learn.microsoft.com/en-us/azure/private-link/private-link-overview
