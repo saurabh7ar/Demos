@@ -1,0 +1,355 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "namespaces_sbns_demos_name": {
+      "defaultValue": "sbns-demos",
+      "type": "String"
+    },
+    "virtualNetworks_vnet_demos_name": {
+      "defaultValue": "vnet-demos",
+      "type": "String"
+    },
+    "privateEndpoints_pvendpt_sbns_demos_name": {
+      "defaultValue": "pvendpt-sbns-demos",
+      "type": "String"
+    },
+    "configurationStores_ac_demos_name": {
+      "defaultValue": "ac-demos",
+      "type": "String"
+    },
+    "privateDnsZones_privatelink_servicebus_windows_net_name": {
+      "defaultValue": "privatelink.servicebus.windows.net",
+      "type": "String"
+    },
+    "networkInterfaces_pvendpt_sbns_demos_nic_5f71ce5f_9efd_4a8b_b66f_ba2cf0228142_name": {
+      "defaultValue": "pvendpt-sbns-demos.nic.5f71ce5f-9efd-4a8b-b66f-ba2cf0228142",
+      "type": "String"
+    }
+  },
+  "variables": {},
+  "resources": [
+    {
+      "type": "Microsoft.AppConfiguration/configurationStores",
+      "apiVersion": "2023-03-01",
+      "name": "[parameters('configurationStores_ac_demos_name')]",
+      "location": "eastus",
+      "sku": {
+        "name": "standard"
+      },
+      "properties": {
+        "encryption": {},
+        "disableLocalAuth": false,
+        "softDeleteRetentionInDays": 7,
+        "enablePurgeProtection": false
+      }
+    },
+    {
+      "type": "Microsoft.Network/privateDnsZones",
+      "apiVersion": "2018-09-01",
+      "name": "[parameters('privateDnsZones_privatelink_servicebus_windows_net_name')]",
+      "location": "global",
+      "properties": {
+        "maxNumberOfRecordSets": 25000,
+        "maxNumberOfVirtualNetworkLinks": 1000,
+        "maxNumberOfVirtualNetworkLinksWithRegistration": 100,
+        "numberOfRecordSets": 2,
+        "numberOfVirtualNetworkLinks": 1,
+        "numberOfVirtualNetworkLinksWithRegistration": 0,
+        "provisioningState": "Succeeded"
+      }
+    },
+    {
+      "type": "Microsoft.Network/virtualNetworks",
+      "apiVersion": "2022-11-01",
+      "name": "[parameters('virtualNetworks_vnet_demos_name')]",
+      "location": "eastus",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "10.1.0.0/16"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "default",
+            "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_vnet_demos_name'), 'default')]",
+            "properties": {
+              "addressPrefix": "10.1.0.0/24",
+              "delegations": [],
+              "privateEndpointNetworkPolicies": "Disabled",
+              "privateLinkServiceNetworkPolicies": "Enabled"
+            },
+            "type": "Microsoft.Network/virtualNetworks/subnets"
+          }
+        ],
+        "virtualNetworkPeerings": [],
+        "enableDdosProtection": false
+      }
+    },
+    {
+      "type": "Microsoft.Network/networkInterfaces",
+      "apiVersion": "2022-11-01",
+      "name": "[parameters('networkInterfaces_pvendpt_sbns_demos_nic_5f71ce5f_9efd_4a8b_b66f_ba2cf0228142_name')]",
+      "location": "eastus",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_vnet_demos_name'), 'default')]"
+      ],
+      "kind": "Regular",
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "privateEndpointIpConfig.ec2c36d7-1434-4c32-9929-3a97b8cde3a3",
+            "id": "[concat(resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_pvendpt_sbns_demos_nic_5f71ce5f_9efd_4a8b_b66f_ba2cf0228142_name')), '/ipConfigurations/privateEndpointIpConfig.ec2c36d7-1434-4c32-9929-3a97b8cde3a3')]",
+            "etag": "W/\"68b510ff-8960-4cd7-8f3a-bf341b355af5\"",
+            "type": "Microsoft.Network/networkInterfaces/ipConfigurations",
+            "properties": {
+              "provisioningState": "Succeeded",
+              "privateIPAddress": "10.1.0.4",
+              "privateIPAllocationMethod": "Dynamic",
+              "subnet": {
+                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_vnet_demos_name'), 'default')]"
+              },
+              "primary": true,
+              "privateIPAddressVersion": "IPv4",
+              "privateLinkConnectionProperties": {
+                "groupId": "namespace",
+                "requiredMemberName": "namespace",
+                "fqdns": [
+                  "sbns-demos.servicebus.windows.net"
+                ]
+              }
+            }
+          }
+        ],
+        "dnsSettings": {
+          "dnsServers": []
+        },
+        "enableAcceleratedNetworking": false,
+        "enableIPForwarding": false,
+        "disableTcpStateTracking": false,
+        "nicType": "Standard"
+      }
+    },
+    {
+      "type": "Microsoft.Network/privateDnsZones/A",
+      "apiVersion": "2018-09-01",
+      "name": "[concat(parameters('privateDnsZones_privatelink_servicebus_windows_net_name'), '/sbns-demos')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/privateDnsZones', parameters('privateDnsZones_privatelink_servicebus_windows_net_name'))]"
+      ],
+      "properties": {
+        "ttl": 3600,
+        "aRecords": [
+          {
+            "ipv4Address": "10.1.0.4"
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Network/privateDnsZones/SOA",
+      "apiVersion": "2018-09-01",
+      "name": "[concat(parameters('privateDnsZones_privatelink_servicebus_windows_net_name'), '/@')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/privateDnsZones', parameters('privateDnsZones_privatelink_servicebus_windows_net_name'))]"
+      ],
+      "properties": {
+        "ttl": 3600,
+        "soaRecord": {
+          "email": "azureprivatedns-host.microsoft.com",
+          "expireTime": 2419200,
+          "host": "azureprivatedns.net",
+          "minimumTtl": 10,
+          "refreshTime": 3600,
+          "retryTime": 300,
+          "serialNumber": 1
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Network/virtualNetworks/subnets",
+      "apiVersion": "2022-11-01",
+      "name": "[concat(parameters('virtualNetworks_vnet_demos_name'), '/default')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_vnet_demos_name'))]"
+      ],
+      "properties": {
+        "addressPrefix": "10.1.0.0/24",
+        "delegations": [],
+        "privateEndpointNetworkPolicies": "Disabled",
+        "privateLinkServiceNetworkPolicies": "Enabled"
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces",
+      "apiVersion": "2022-10-01-preview",
+      "name": "[parameters('namespaces_sbns_demos_name')]",
+      "location": "East US",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/privateEndpoints', parameters('privateEndpoints_pvendpt_sbns_demos_name'))]"
+      ],
+      "sku": {
+        "name": "Premium",
+        "tier": "Premium",
+        "capacity": 1
+      },
+      "properties": {
+        "premiumMessagingPartitions": 1,
+        "minimumTlsVersion": "1.2",
+        "publicNetworkAccess": "Disabled",
+        "disableLocalAuth": false,
+        "zoneRedundant": true,
+        "privateEndpointConnections": [
+          {
+            "properties": {
+              "provisioningState": "Succeeded",
+              "privateEndpoint": {
+                "id": "[resourceId('Microsoft.Network/privateEndpoints', parameters('privateEndpoints_pvendpt_sbns_demos_name'))]"
+              },
+              "privateLinkServiceConnectionState": {
+                "status": "Approved",
+                "description": "Auto-Approved"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/authorizationrules",
+      "apiVersion": "2022-10-01-preview",
+      "name": "[concat(parameters('namespaces_sbns_demos_name'), '/RootManageSharedAccessKey')]",
+      "location": "eastus",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sbns_demos_name'))]"
+      ],
+      "properties": {
+        "rights": [
+          "Listen",
+          "Manage",
+          "Send"
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/networkRuleSets",
+      "apiVersion": "2022-10-01-preview",
+      "name": "[concat(parameters('namespaces_sbns_demos_name'), '/default')]",
+      "location": "East US",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sbns_demos_name'))]"
+      ],
+      "properties": {
+        "publicNetworkAccess": "Disabled",
+        "defaultAction": "Allow",
+        "virtualNetworkRules": [],
+        "ipRules": [],
+        "trustedServiceAccessEnabled": true
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/queues",
+      "apiVersion": "2022-10-01-preview",
+      "name": "[concat(parameters('namespaces_sbns_demos_name'), '/demo')]",
+      "location": "eastus",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sbns_demos_name'))]"
+      ],
+      "properties": {
+        "maxMessageSizeInKilobytes": 1024,
+        "lockDuration": "PT1M",
+        "maxSizeInMegabytes": 1024,
+        "requiresDuplicateDetection": false,
+        "requiresSession": false,
+        "defaultMessageTimeToLive": "P14D",
+        "deadLetteringOnMessageExpiration": false,
+        "enableBatchedOperations": true,
+        "duplicateDetectionHistoryTimeWindow": "PT10M",
+        "maxDeliveryCount": 10,
+        "status": "Active",
+        "autoDeleteOnIdle": "P10675199DT2H48M5.4775807S",
+        "enablePartitioning": false,
+        "enableExpress": false
+      }
+    },
+    {
+      "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+      "apiVersion": "2018-09-01",
+      "name": "[concat(parameters('privateDnsZones_privatelink_servicebus_windows_net_name'), '/hzk6stlelvikw')]",
+      "location": "global",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/privateDnsZones', parameters('privateDnsZones_privatelink_servicebus_windows_net_name'))]",
+        "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_vnet_demos_name'))]"
+      ],
+      "properties": {
+        "registrationEnabled": false,
+        "virtualNetwork": {
+          "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_vnet_demos_name'))]"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Network/privateEndpoints",
+      "apiVersion": "2022-11-01",
+      "name": "[parameters('privateEndpoints_pvendpt_sbns_demos_name')]",
+      "location": "eastus",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sbns_demos_name'))]",
+        "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_vnet_demos_name'), 'default')]"
+      ],
+      "properties": {
+        "privateLinkServiceConnections": [
+          {
+            "name": "[concat(parameters('privateEndpoints_pvendpt_sbns_demos_name'), '_58f08ef7-10f8-4368-8044-85c922e9c058')]",
+            "id": "[concat(resourceId('Microsoft.Network/privateEndpoints', parameters('privateEndpoints_pvendpt_sbns_demos_name')), concat('/privateLinkServiceConnections/', parameters('privateEndpoints_pvendpt_sbns_demos_name'), '_58f08ef7-10f8-4368-8044-85c922e9c058'))]",
+            "properties": {
+              "privateLinkServiceId": "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sbns_demos_name'))]",
+              "groupIds": [
+                "namespace"
+              ],
+              "privateLinkServiceConnectionState": {
+                "status": "Approved",
+                "description": "Auto-Approved",
+                "actionsRequired": "None"
+              }
+            }
+          }
+        ],
+        "manualPrivateLinkServiceConnections": [],
+        "subnet": {
+          "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_vnet_demos_name'), 'default')]"
+        },
+        "ipConfigurations": [],
+        "customDnsConfigs": [
+          {
+            "fqdn": "sbns-demos.servicebus.windows.net",
+            "ipAddresses": [
+              "10.1.0.4"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/privateEndpointConnections",
+      "apiVersion": "2022-10-01-preview",
+      "name": "[concat(parameters('namespaces_sbns_demos_name'), '/9c4c38a2-8355-48f7-b2cf-a4178edb81ba')]",
+      "location": "East US",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sbns_demos_name'))]",
+        "[resourceId('Microsoft.Network/privateEndpoints', parameters('privateEndpoints_pvendpt_sbns_demos_name'))]"
+      ],
+      "properties": {
+        "provisioningState": "Succeeded",
+        "privateEndpoint": {
+          "id": "[resourceId('Microsoft.Network/privateEndpoints', parameters('privateEndpoints_pvendpt_sbns_demos_name'))]"
+        },
+        "privateLinkServiceConnectionState": {
+          "status": "Approved",
+          "description": "Auto-Approved"
+        }
+      }
+    }
+  ]
+}

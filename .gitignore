@@ -3,3 +3,5 @@
 ################################################################################
 
 /.vs/Demos/FileContentIndex
+/Azure Service Bus/Private Endpoints/ServiceBusClient/obj
+/Azure Service Bus/Private Endpoints/ServiceBusClient/.vs
