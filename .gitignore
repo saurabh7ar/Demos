@@ -5,3 +5,6 @@
 /.vs/Demos/FileContentIndex
 /Azure Service Bus/Private Endpoints/ServiceBusClient/obj
 /Azure Service Bus/Private Endpoints/ServiceBusClient/.vs
+/APIM/BackendAPI/BackendAPI/.vs/BackendAPI
+/APIM/BackendAPI/BackendAPI/bin/Debug/net6.0
+/APIM/BackendAPI/BackendAPI/obj

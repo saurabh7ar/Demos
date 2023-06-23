@@ -26,7 +26,8 @@ The article offer guidance on building your APIM landing zone using Azure landin
        - For multi-region deployment use Azure Front Door.
 - Security
    - Deals with securing Frontend APIs, Backends & developer portal.
-   - 
+   - References
+      - [Authn & Authz](https://learn.microsoft.com/en-us/azure/api-management/authentication-authorization-overview)
 - Management
 - Governance
 - Platform automation and DevOps
