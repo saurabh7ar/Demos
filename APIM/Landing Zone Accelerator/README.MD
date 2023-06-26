@@ -35,6 +35,7 @@ The article offer guidance on building your APIM landing zone using Azure landin
 ## Implementation
 
  - [IaaC Template](https://github.com/Azure/apim-landing-zone-accelerator)
+ - [Create an Azure Active Directory application and service principal] (https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure?tabs=azure-cli%2Cwindows#use-the-azure-login-action-with-a-service-principal-secret)
 
 ## References
 
