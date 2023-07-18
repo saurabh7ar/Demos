@@ -48,7 +48,7 @@ When implementing IP filtering in Azure APIM using WAF, consider the following g
 
 By following these guidelines, you can implement a robust IP filtering solution for Azure APIM while adhering to the defense in depth principle.
 
-Refer - [Quickstart: Direct web traffic using a Resource Manager template - Azure Application Gateway | Microsoft Learn](https://learn.microsoft.com/en-us/azure/application-gateway/quick-create-template)
+Refer - [IaaC]([https://learn.microsoft.com/en-us/azure/application-gateway/quick-create-template](https://github.com/Azure/azure-quickstart-templates/tree/master/demos/ag-docs-qs))
 
 ## Conclusion
 IP filtering is an essential security measure to protect Azure APIM services from unauthorized access. By leveraging Azure Web Application Firewall (WAF) capabilities, along with custom rules and managed rule sets, you can implement a defense in depth strategy for securing your APIM services. This architectural document has provided an overview of IP filtering in Azure APIM and outlined the steps to configure WAF policies and rules. By implementing these best practices, you can enhance the security of your Azure APIM deployments.
