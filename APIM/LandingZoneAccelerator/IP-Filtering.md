@@ -5,8 +5,11 @@
 In the context of Azure API Management (APIM), IP filtering is an important security measure that helps protect APIs from unauthorized access. By implementing IP filtering, you can restrict access to your APIs based on the source IP addresses or IP ranges. This architectural document provides guidance on implementing IP filtering in Azure APIM while following the defense in depth principle.
 
 ## Defense in Depth
+Defense in Depth is a multi-layered security strategy that aims to protect your Azure resources from various types of threats and potential attacks. In this implementation there are multiple layers of defense to mitigate risks and protect against attacks. By combining various security technologies such as Azure Firewall, Network Security Groups, Virtual Network segmentation, Identity and Access Management (IAM), Azure Security Center, and more, we can strengthen your defenses against both known and emerging threats. 
 
-Defense in depth is a security strategy that involves implementing multiple layers of defense to mitigate risks and protect against attacks. By layering security defenses, the chances of a successful attack are significantly reduced. When designing and implementing IP filtering in Azure APIM, it is important to consider defense in depth principles to ensure a robust security posture.
+This layered approach ensures that even if one security layer is breached, there are additional layers in place to thwart any further attacks and safeguard your valuable data and applications. With Defense in Depth, we can provide a comprehensive and proactive security solution to help you build and maintain a secure and protected Azure environment. If you have any questions or would like to explore these security options further, I'm here to assist you!
+
+When designing and implementing IP filtering in Azure APIM, it is important to consider defense in depth principles to ensure a robust security posture.
 
 ## Azure Web Application Firewall (WAF)
 To enhance the security of Azure APIM and protect against common web application exploits and vulnerabilities, it is recommended to deploy a Web Application Firewall (WAF) in front of APIM. Azure WAF provides inspection of HTTP requests and helps prevent malicious attacks at the web layer, such as SQL injection and cross-site scripting.
